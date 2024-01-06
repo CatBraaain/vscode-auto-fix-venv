@@ -1,0 +1,27 @@
+{
+    "name": "auto-fix-venv",
+    "version": "1.0.0",
+    "displayName": "Auto Fix Venv",
+    "description": "Automatically detect broken python venv and fix it",
+    "publisher": "CatBraaain",
+    "engines": {
+        "vscode": "^1.33.1"
+    },
+    "lisence": "MIT",
+    "main": "./src/extension.js",
+    "activationEvents": [
+        "workspaceContains:.venv"
+    ],
+    "contributes": {
+        "commands": [
+            {
+                "command": "auto-fix-venv.recreate",
+                "title": "Auto Fix Venv: Recreate venv"
+            }
+        ]
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/CatBraaain/vscode-auto-fix-venv.git"
+    }
+}
