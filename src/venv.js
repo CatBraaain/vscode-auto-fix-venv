@@ -33,18 +33,19 @@ class Venv {
 
   static recreate() {
     const commands = [
-      ".venv\\Scripts\\python -m pip freeze > temp_requirements.txt",
+      ".venv\\Scripts\\python.exe -m pip freeze > temp_requirements.txt",
       ".venv\\Scripts\\deactivate.bat",
       "python -m venv .venv --clear",
       ".venv\\Scripts\\activate.bat",
-      "python -m pip install --upgrade pip",
-      "pip install -r temp_requirements.txt",
+      ".venv\\Scripts\\python.exe -m pip install --upgrade pip",
+      ".venv\\Scripts\\pip.exe install -r temp_requirements.txt",
       "del temp_requirements.txt",
     ];
 
     const terminal = vscode.window.createTerminal("revenv");
     terminal.show();
     commands.forEach(command => {
+      // TODO: error check here
       terminal.sendText(`${command}`);
     });
   }
