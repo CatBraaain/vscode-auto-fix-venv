@@ -12,7 +12,7 @@
         end
 
         subgraph Causes[The causes of breaking venv]
-            subgraph ChangeVenvPath[changing venv path]
+            subgraph ChangeVenvPath[Changing venv path]
                 direction LR
                 1[changing project name]
                 2[moving project folder]
@@ -20,13 +20,12 @@
                 4[moving venv folder]
                 1 ~~~ 2
                 3 ~~~ 4
-
             end
         end
 
         subgraph RecreateVenv[Recreate Venv Manually]
             direction LR
-            stillBroken{still Broken?}
+            stillBroken{still broken?}
             stillBroken -- yes --> recreate[recreate venv with command\n`auto-fix-venv.recreate`]
             stillBroken -- no --> allGood[all good]
         end
