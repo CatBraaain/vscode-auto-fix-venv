@@ -1,19 +1,18 @@
 const vscode = require("vscode");
-const fs = vscode.workspace.fs;
+const fs = require("fs");
+const path = require("path");
 
 class Venv {
   async init() {
     const curFolderUri = vscode.workspace.workspaceFolders[0].uri;
-    this.curUri = curFolderUri.with({ path: `${curFolderUri.path}/.venv` });
 
-    this.batUri = this.curUri.with({ path: `${this.curUri.path}/Scripts/activate.bat` });
-    this.batBytes = await fs.readFile(this.batUri);
-    this.batStr = Buffer.from(this.batBytes).toString("utf8");
+    this.curPath = path.join(curFolderUri.fsPath, ".venv");
+    this.batPath = path.join(this.curPath, "Scripts", "activate.bat");
 
+    this.batStr = fs.readFileSync(this.batPath, "utf8");
     this.oldPath = this.batStr.match(/(?<=^set VIRTUAL_ENV=).*$/m)[0];
-    this.oldUri = vscode.Uri.file(this.oldPath);
 
-    this.isBroken = this.oldUri.fsPath !== this.curUri.fsPath;
+    this.isBroken = this.oldPath !== this.curPath;
   }
 
   static async autoFixPath() {
@@ -21,14 +20,12 @@ class Venv {
     await venv.init();
     if (venv.isBroken) {
       await venv.fixPath();
-      // vscode.commands.executeCommand("auto-revenv.revenv");
     }
   }
 
   async fixPath() {
-    const writeStr = this.batStr.replace(this.oldPath, this.curUri.fsPath);
-    const writeBytes = Buffer.from(writeStr, "utf8");
-    await fs.writeFile(this.batUri, writeBytes);
+    const newBatStr = this.batStr.replace(this.oldPath, this.curPath);
+    fs.writeFileSync(this.batPath, newBatStr);
   }
 
   static recreate() {
