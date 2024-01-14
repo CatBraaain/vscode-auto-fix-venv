@@ -1,6 +1,6 @@
 {
     "name": "auto-fix-venv",
-    "version": "1.0.4",
+    "version": "1.1.0",
     "displayName": "Auto Fix Venv",
     "description": "Automatically detect broken python venv and fix it",
     "publisher": "CatBraaain",
@@ -10,7 +10,7 @@
     "lisence": "MIT",
     "main": "./src/extension.js",
     "activationEvents": [
-        "workspaceContains:.venv"
+        "workspaceContains:**/{Scripts,bin}/python.exe"
     ],
     "contributes": {
         "commands": [

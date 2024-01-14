@@ -1,50 +1,40 @@
 const vscode = require("vscode");
 const fs = require("fs");
 const path = require("path");
+const Activator = require("./activator.js");
+
+const targetScriptsDirs = ["Scripts", "bin"];
+const targetActivators = [
+  "activate",
+  "activate.bat",
+  "activate.csh",
+  "activate.fish",
+  "activate.nu",
+];
+const untargetActivators = ["Activate.ps1", "activate_this.py"];
 
 class Venv {
-  async init() {
-    const curFolderUri = vscode.workspace.workspaceFolders[0].uri;
+  constructor(venvPath) {
+    this.path = venvPath;
+    this.workspacePath = path.normalize(vscode.workspace.workspaceFolders[0].uri.fsPath);
 
-    this.curPath = path.join(curFolderUri.fsPath, ".venv");
-    this.batPath = path.join(this.curPath, "Scripts", "activate.bat");
+    const dirNames = fs.readdirSync(this.path);
+    const scriptsDirNames = dirNames.filter(dirName => targetScriptsDirs.includes(dirName));
+    const scriptsDirPaths = scriptsDirNames.map(dirName => path.join(this.path, dirName));
+    this.scriptsDirPath = scriptsDirPaths.filter(scriptDirPath =>
+      fs.existsSync(path.join(scriptDirPath, "python.exe"))
+    )[0];
 
-    this.batStr = fs.readFileSync(this.batPath, "utf8");
-    this.oldPath = this.batStr.match(/(?<=^set VIRTUAL_ENV=).*$/m)[0];
+    this.pythonPath = path.join(this.scriptsDirPath, "python.exe");
+    this.pipPath = path.join(this.scriptsDirPath, "pip.exe");
+    this.deactivatePath = path.join(this.scriptsDirPath, "deactivate");
 
-    this.isBroken = this.oldPath !== this.curPath;
-  }
-
-  static async autoFixPath() {
-    const venv = new this();
-    await venv.init();
-    if (venv.isBroken) {
-      await venv.fixPath();
-    }
-  }
-
-  async fixPath() {
-    const newBatStr = this.batStr.replace(this.oldPath, this.curPath);
-    fs.writeFileSync(this.batPath, newBatStr);
-  }
-
-  static recreate() {
-    const commands = [
-      ".venv\\Scripts\\python.exe -m pip freeze > temp_requirements.txt",
-      ".venv\\Scripts\\deactivate.bat",
-      "python -m venv .venv --clear",
-      ".venv\\Scripts\\activate.bat",
-      ".venv\\Scripts\\python.exe -m pip install --upgrade pip",
-      ".venv\\Scripts\\pip.exe install -r temp_requirements.txt",
-      "del temp_requirements.txt",
-    ];
-
-    const terminal = vscode.window.createTerminal("revenv");
-    terminal.show();
-    commands.forEach(command => {
-      // TODO: error check here
-      terminal.sendText(`${command}`);
-    });
+    const fileNames = fs.readdirSync(this.scriptsDirPath);
+    const activatorNames = fileNames
+      .filter(dirName => targetActivators.includes(dirName))
+      .filter(dirName => !untargetActivators.includes(dirName));
+    const activatorPaths = activatorNames.map(dirName => path.join(this.scriptsDirPath, dirName));
+    this.activators = activatorPaths.map(activatorPath => new Activator(activatorPath));
   }
 }
 
