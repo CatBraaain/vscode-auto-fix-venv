@@ -4,7 +4,7 @@ const path = require("path");
 const Venv = require("./venv.js");
 
 class AutoFixVenv {
-  static async autoFixActivators() {
+  async autoFixActivators() {
     const venvs = await this.#getVenvs();
     venvs.forEach(venv =>
       venv.activators
@@ -13,7 +13,7 @@ class AutoFixVenv {
     );
   }
 
-  static async #getVenvs() {
+  async #getVenvs() {
     const pythonUris = await vscode.workspace.findFiles("**/{Scripts,bin}/python.exe");
     const pythonPaths = pythonUris.map(pythonUri => path.normalize(pythonUri.fsPath));
     const venvPaths = Array.from(
@@ -24,27 +24,30 @@ class AutoFixVenv {
     return venvs;
   }
 
-  static async recreate() {
-    const venvs = await AutoFixVenv.#getVenvs();
+  async recreateVenvs() {
+    const venvs = await this.#getVenvs();
 
     venvs.forEach((venv, index) => {
-      const tempRequirementPath = `temp_requirements_${index}.txt`;
-      const commands = [
-        `${venv.pythonPath} -m pip freeze > ${tempRequirementPath}`,
-        `${venv.deactivatePath}`,
-        `python -m venv ${venv.path} --clear`,
-        // `python -m virtualenv ${venvPath}`,
-        `${venv.pythonPath} -m pip install --upgrade pip`,
-        `${venv.pipPath} install -r ${tempRequirementPath}`,
-        `del ${tempRequirementPath}`,
-      ];
+      this.#recreateVenv(venv, index);
+    });
+  }
 
-      const terminal = vscode.window.createTerminal("auto-fix-venv");
-      terminal.show();
-      commands.forEach(command => {
-        // TODO: error check here
-        terminal.sendText(`${command}`);
-      });
+  #recreateVenv(venv, index) {
+    const tempRequirementPath = `temp_requirements_${index}.txt`;
+    let commands = [
+      `${venv.deactivatePath}`,
+      `${venv.pythonPath} -m pip freeze > ${tempRequirementPath}`,
+      `python -m venv ${venv.path} --clear`,
+      // `python -m virtualenv ${venvPath}`,
+      `${venv.pythonPath} -m pip install --upgrade pip`,
+      `${venv.pipPath} install -r ${tempRequirementPath}`,
+      `del ${tempRequirementPath}`,
+    ];
+
+    const terminal = vscode.window.createTerminal("auto-fix-venv");
+    terminal.show();
+    commands.forEach(command => {
+      terminal.sendText(`${command}`);
     });
   }
 }

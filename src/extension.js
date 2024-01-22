@@ -1,11 +1,14 @@
 const vscode = require("vscode");
 const fs = require("fs");
 const path = require("path");
-const autoFixVenv = require("./auto-fix-venv.js");
+const AutoFixVenv = require("./auto-fix-venv.js");
 
 async function activate(context) {
+  const autoFixVenv = new AutoFixVenv();
   context.subscriptions.push(
-    vscode.commands.registerCommand("auto-fix-venv.recreate", autoFixVenv.recreate)
+    vscode.commands.registerCommand("auto-fix-venv.recreateVenvs", () => {
+      autoFixVenv.recreateVenvs();
+    })
   );
 
   await autoFixVenv.autoFixActivators();
