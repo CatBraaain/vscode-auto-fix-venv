@@ -30,6 +30,16 @@ class AutoFixVenv {
   }
 
   async recreateVenvs() {
+    const isIsortOn = vscode.extensions.getExtension("ms-python.isort")?.isActive;
+    const wasIsortOn = isIsortOn;
+    if (isIsortOn) {
+      vscode.window.showInformationMessage(
+        "Auto Fix Venv: this command not working when isort extension is on"
+      );
+      // warning: isort extension is on. a
+      return;
+    }
+
     const venvs = await this.#getVenvs();
 
     venvs.forEach((venv, index) => {
