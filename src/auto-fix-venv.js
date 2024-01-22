@@ -35,13 +35,13 @@ class AutoFixVenv {
   #recreateVenv(venv, index) {
     const tempRequirementPath = `temp_requirements_${index}.txt`;
     let commands = [
-      `${venv.deactivatePath}`,
-      `${venv.pythonPath} -m pip freeze > ${tempRequirementPath}`,
-      `python -m venv ${venv.path} --clear`,
+      `"${venv.deactivatePath}"`,
+      `"${venv.pythonPath}" -m pip freeze > "${tempRequirementPath}"`,
+      `python -m venv "${venv.path}" --clear`,
       // `python -m virtualenv ${venvPath}`,
-      `${venv.pythonPath} -m pip install --upgrade pip`,
-      `${venv.pipPath} install -r ${tempRequirementPath}`,
-      `del ${tempRequirementPath}`,
+      `"${venv.pythonPath}" -m pip install --upgrade pip`,
+      `"${venv.pipPath}" install -r "${tempRequirementPath}"`,
+      `del "${tempRequirementPath}"`,
     ];
 
     const terminal = vscode.window.createTerminal("auto-fix-venv");
