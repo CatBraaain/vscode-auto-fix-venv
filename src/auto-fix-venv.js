@@ -4,6 +4,11 @@ const path = require("path");
 const Venv = require("./venv.js");
 
 class AutoFixVenv {
+  constructor() {
+    this.defaultTerminal = vscode.env.shell;
+    this.isPowershell = this.defaultTerminal.includes("powershell");
+  }
+
   async autoFixActivators() {
     const venvs = await this.#getVenvs();
     venvs.forEach(venv =>
@@ -43,12 +48,25 @@ class AutoFixVenv {
       `"${venv.pipPath}" install -r "${tempRequirementPath}"`,
       `del "${tempRequirementPath}"`,
     ];
+    if (this.isPowershell) {
+      commands = commands.map(command => `& ${command}`);
+    }
 
-    const terminal = vscode.window.createTerminal("auto-fix-venv");
+    const terminal = this.#getTerminal("auto-fix-venv", index);
     terminal.show();
     commands.forEach(command => {
       terminal.sendText(`${command}`);
     });
+  }
+
+  #getTerminal(terminalName, index) {
+    const existingTerminal = vscode.window.terminals.filter(
+      terminal => terminal.name === terminalName
+    )[index];
+    const terminal = existingTerminal
+      ? existingTerminal
+      : vscode.window.createTerminal(terminalName);
+    return terminal;
   }
 }
 
