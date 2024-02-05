@@ -21,19 +21,22 @@ class Venv {
     const dirNames = fs.readdirSync(this.path);
     const scriptsDirNames = dirNames.filter(dirName => targetScriptsDirs.includes(dirName));
     const scriptsDirPaths = scriptsDirNames.map(dirName => path.join(this.path, dirName));
-    this.scriptsDirPath = scriptsDirPaths.filter(scriptDirPath =>
+    this.scriptsDirPath = scriptsDirPaths.find(scriptDirPath =>
       fs.existsSync(path.join(scriptDirPath, "python.exe"))
-    )[0];
+    );
 
     this.pythonPath = path.join(this.scriptsDirPath, "python.exe");
     this.pipPath = path.join(this.scriptsDirPath, "pip.exe");
     this.deactivatePath = path.join(this.scriptsDirPath, "deactivate");
 
-    const fileNames = fs.readdirSync(this.scriptsDirPath);
-    const activatorNames = fileNames
-      .filter(dirName => targetActivators.includes(dirName))
-      .filter(dirName => !untargetActivators.includes(dirName));
-    const activatorPaths = activatorNames.map(dirName => path.join(this.scriptsDirPath, dirName));
+    const scriptFileNames = fs.readdirSync(this.scriptsDirPath);
+    const activatorNames = scriptFileNames.filter(
+      scriptFileName =>
+        targetActivators.includes(scriptFileName) && !untargetActivators.includes(scriptFileName)
+    );
+    const activatorPaths = activatorNames.map(activatorName =>
+      path.join(this.scriptsDirPath, activatorName)
+    );
     this.activators = activatorPaths.map(activatorPath => new Activator(activatorPath));
   }
 }

@@ -5,13 +5,13 @@ const AutoFixVenv = require("./auto-fix-venv.js");
 
 async function activate(context) {
   const autoFixVenv = new AutoFixVenv();
+  await autoFixVenv.autoFixActivators();
+
   context.subscriptions.push(
     vscode.commands.registerCommand("auto-fix-venv.recreateVenvs", () => {
       autoFixVenv.recreateVenvs();
     })
   );
-
-  await autoFixVenv.autoFixActivators();
 
   return;
 }

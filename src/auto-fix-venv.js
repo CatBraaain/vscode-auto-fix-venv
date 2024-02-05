@@ -36,7 +36,6 @@ class AutoFixVenv {
       vscode.window.showInformationMessage(
         "Auto Fix Venv: this command not working when isort extension is on"
       );
-      // warning: isort extension is on. a
       return;
     }
 

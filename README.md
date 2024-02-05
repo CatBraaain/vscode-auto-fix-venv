@@ -23,3 +23,7 @@ Nothing
 # Extension Settings
 
 Coming soon
+
+# Known Issues
+
+`Recreate Venv` command is unstable when other process is using venv's python.exe
