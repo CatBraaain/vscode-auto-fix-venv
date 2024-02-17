@@ -26,7 +26,7 @@
         subgraph RecreateVenv[Recreate Venv Manually]
             direction LR
             stillBroken{still broken?}
-            stillBroken -- yes --> recreate[recreate venv with command\n`auto-fix-venv.recreate`]
+            stillBroken -- yes --> recreate[recreate venv with command\n`auto-fix-venv.recreateVenvs`]
             stillBroken -- no --> allGood[all good]
         end
 

@@ -5,21 +5,21 @@ Support Windows,Linux and Mac.
 
 ![flowchart](docs/flowchart.png)
 
-# Features
+## Features
 
 - Detect multiple venvs dynamically
 - Auto-Fix venv's activate files (activate,activate.bat,activate.csh,activate.fish,activate.nu)
 
-# Upcoming Features
+## Upcoming Features
 
 - `Recreate Venvs` command
   - Some options
   - Error check
 
-# Keybindings
+## Keybindings
 
 Nothing
 
-# Extension Settings
+## Extension Settings
 
 Coming soon

@@ -1,6 +1,6 @@
 {
     "name": "auto-fix-venv",
-    "version": "1.2.0",
+    "version": "1.2.2",
     "displayName": "Auto Fix Venv",
     "description": "Automatically detect broken python venv and fix it",
     "publisher": "CatBraaain",
