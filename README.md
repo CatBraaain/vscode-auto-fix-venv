@@ -1,8 +1,7 @@
 ﻿# Auto Fix Venv
 
-Automatically detect broken python venv and fix it.
-(Currently works only in windows)
-
+Automatically detect broken python venv and fix it. 
+Support Windows,Linux and Mac.
 
 ![flowchart](docs/flowchart.png)
 
@@ -13,8 +12,9 @@ Automatically detect broken python venv and fix it.
 
 # Upcoming Features
 
-- Support virtualenv in Recreate Command
-- Support Linux and Mac
+- `Recreate Venvs` command
+  - Some options
+  - Error check
 
 # Keybindings
 
@@ -23,7 +23,3 @@ Nothing
 # Extension Settings
 
 Coming soon
-
-# Known Issues
-
-`Recreate Venv` command is unstable when other process is using venv's python.exe

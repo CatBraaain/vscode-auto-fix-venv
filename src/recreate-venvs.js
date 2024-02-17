@@ -5,11 +5,43 @@ const Venv = require("./venv.js");
 const getVenvs = require("./get-venvs.js");
 
 async function recreateVenvs() {
+  const shouldReturn = getShouldReturn();
+  if (shouldReturn) {
+    return;
+  }
+
   const venvs = await getVenvs();
 
   await venvs.forEach(async (venv, index) => {
+    const shouldRun = venv.isLocked ? await getShouldRun() : true;
+    if (shouldRun) {
       recreateVenv(venv, index, shouldRun);
+    }
   });
+}
+
+function getShouldReturn() {
+  if (process.platform != "win32") {
+    vscode.window.showInformationMessage(
+      "Recreate venvs: This commands is currently available in Windows only. I welcome pull request."
+    );
+    return true;
+  } else {
+    return false;
+  }
+}
+
+async function getShouldRun() {
+  // TODO: "always" option
+  const answer = await vscode.window.showWarningMessage(
+    "Recreate venvs: The venv file is being used by another process. Do you want to continue forcefully?",
+    // "Always",
+    // "Once",
+    "Yes",
+    "Cancel"
+  );
+  const shouldRun = answer == "Yes";
+  return shouldRun;
 }
 
 function recreateVenv(venv, index) {

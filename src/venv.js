@@ -2,6 +2,7 @@ const vscode = require("vscode");
 const fs = require("fs");
 const path = require("path");
 const Activator = require("./activator.js");
+const { execSync } = require("child_process");
 
 const targetDirNames = ["Scripts", "bin"];
 const targetActivatorNames = [
@@ -22,6 +23,9 @@ class Venv {
     this.deactivatePath = path.join(this.scriptDirPath, "deactivate");
     this.activators = this.getActivators();
 
+    if (process.platform == "win32") {
+      this.isLocked = this.getIsLocked();
+    }
   }
 
   getScriptDirPath() {
@@ -44,7 +48,17 @@ class Venv {
     );
     const activators = activatorPaths.map(activatorPath => new Activator(activatorPath));
     return activators;
+  }
 
+  getIsLocked() {
+    const problemProcessesCount = execSync(
+      `(Get-Process | ? {$_.Path -eq "${this.pythonPath}"}).Count`,
+      {
+        shell: "powershell",
+      }
+    ).toString();
+    const isLocked = problemProcessesCount > 0;
+    return isLocked;
   }
 }
 
