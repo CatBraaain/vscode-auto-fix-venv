@@ -10,6 +10,7 @@
     "lisence": "MIT",
     "main": "./src/extension.js",
     "activationEvents": [
+        "workspaceContains:*",
         "workspaceContains:**/{Scripts,bin}/python.exe"
     ],
     "contributes": {
