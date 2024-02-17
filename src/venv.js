@@ -3,41 +3,48 @@ const fs = require("fs");
 const path = require("path");
 const Activator = require("./activator.js");
 
-const targetScriptsDirs = ["Scripts", "bin"];
-const targetActivators = [
+const targetDirNames = ["Scripts", "bin"];
+const targetActivatorNames = [
   "activate",
   "activate.bat",
   "activate.csh",
   "activate.fish",
   "activate.nu",
 ];
-const untargetActivators = ["Activate.ps1", "activate_this.py"];
+// const untargetActivatorNames = ["Activate.ps1", "activate_this.py"];
 
 class Venv {
   constructor(venvPath) {
     this.path = venvPath;
-    this.workspacePath = path.normalize(vscode.workspace.workspaceFolders[0].uri.fsPath);
+    this.scriptDirPath = this.getScriptDirPath();
+    this.pythonPath = path.join(this.scriptDirPath, "python.exe");
+    this.pipPath = path.join(this.scriptDirPath, "pip.exe");
+    this.deactivatePath = path.join(this.scriptDirPath, "deactivate");
+    this.activators = this.getActivators();
 
+  }
+
+  getScriptDirPath() {
     const dirNames = fs.readdirSync(this.path);
-    const scriptsDirNames = dirNames.filter(dirName => targetScriptsDirs.includes(dirName));
-    const scriptsDirPaths = scriptsDirNames.map(dirName => path.join(this.path, dirName));
-    this.scriptsDirPath = scriptsDirPaths.find(scriptDirPath =>
+    const scriptDirNames = dirNames.filter(dirName => targetDirNames.includes(dirName));
+    const scriptDirPaths = scriptDirNames.map(dirName => path.join(this.path, dirName));
+    const scriptDirPath = scriptDirPaths.find(scriptDirPath =>
       fs.existsSync(path.join(scriptDirPath, "python.exe"))
     );
+    return scriptDirPath;
+  }
 
-    this.pythonPath = path.join(this.scriptsDirPath, "python.exe");
-    this.pipPath = path.join(this.scriptsDirPath, "pip.exe");
-    this.deactivatePath = path.join(this.scriptsDirPath, "deactivate");
-
-    const scriptFileNames = fs.readdirSync(this.scriptsDirPath);
-    const activatorNames = scriptFileNames.filter(
-      scriptFileName =>
-        targetActivators.includes(scriptFileName) && !untargetActivators.includes(scriptFileName)
+  getActivators() {
+    const scriptFileNames = fs.readdirSync(this.scriptDirPath);
+    const activatorNames = scriptFileNames.filter(scriptFileName =>
+      targetActivatorNames.includes(scriptFileName)
     );
     const activatorPaths = activatorNames.map(activatorName =>
-      path.join(this.scriptsDirPath, activatorName)
+      path.join(this.scriptDirPath, activatorName)
     );
-    this.activators = activatorPaths.map(activatorPath => new Activator(activatorPath));
+    const activators = activatorPaths.map(activatorPath => new Activator(activatorPath));
+    return activators;
+
   }
 }
 
