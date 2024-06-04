@@ -42,5 +42,8 @@
         "path-extra": "^4.3.0",
         "typescript": "^5.4.5",
         "yaml-import": "^2.0.0"
+    },
+    "dependencies": {
+        "find-process": "^1.4.7"
     }
 }

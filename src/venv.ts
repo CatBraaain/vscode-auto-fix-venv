@@ -1,4 +1,5 @@
 import { execSync } from "child_process";
+import find from "find-process";
 import fs from "fs";
 import path from "path";
 import vscode from "vscode";
@@ -22,7 +23,6 @@ export default class Venv {
   public pipPath: string;
   public deactivatePath: string;
   public activators: Activator[];
-  public isLocked: boolean;
 
   public constructor(venvPath) {
     this.path = venvPath;
@@ -31,7 +31,6 @@ export default class Venv {
     this.pipPath = path.join(this.scriptDirPath, "pip.exe");
     this.deactivatePath = path.join(this.scriptDirPath, "deactivate");
     this.activators = this._getActivators();
-    this.isLocked = this._isLocked();
   }
 
   private _getScriptDirPath(): string {
@@ -56,17 +55,9 @@ export default class Venv {
     return activators;
   }
 
-  private _isLocked(): boolean {
-    if (process.platform === "win32") {
-      const problemProcessesCount = Number(
-        execSync(`(Get-Process | ? {$_.Path -eq "${this.pythonPath}"}).Count`, {
-          shell: "powershell",
-        }).toString()
-      );
-      const isLocked = problemProcessesCount > 0;
-      return isLocked;
-    } else {
-      return true;
-    }
+  public async isLocked(): Promise<boolean> {
+    const prosesses = await find("name", ".*?");
+    const isLocked = prosesses.some(prosess => prosess["bin"] === this.pythonPath);
+    return isLocked;
   }
 }

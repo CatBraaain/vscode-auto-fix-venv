@@ -35,7 +35,7 @@ export default class VenvRepairer {
 
     const venvs = await this.getVenvs();
     venvs.forEach(async (venv, index) => {
-      const shouldRun = venv.isLocked ? await this._shouldForceRun() : true;
+      const shouldRun = (await venv.isLocked()) ? await this._shouldForceRun() : true;
       if (shouldRun) {
         this._recreateVenv(venv, index);
       }
