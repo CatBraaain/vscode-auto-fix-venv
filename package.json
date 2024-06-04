@@ -8,9 +8,9 @@
         "vscode": "^1.33.1"
     },
     "lisence": "MIT",
-    "main": "./src/extension.js",
+    "main": "./dist/extension.js",
     "activationEvents": [
-        "workspaceContains:*",
+        "*",
         "workspaceContains:**/{Scripts,bin}/python.exe"
     ],
     "contributes": {
@@ -21,8 +21,26 @@
             }
         ]
     },
+    "scripts": {
+        "watch": "tsc -w"
+    },
     "repository": {
         "type": "git",
         "url": "https://github.com/CatBraaain/vscode-auto-fix-venv.git"
+    },
+    "devDependencies": {
+        "@types/node": "^20.12.2",
+        "@types/vscode": "^1.87.0",
+        "@typescript-eslint/eslint-plugin": "^7.6.0",
+        "@typescript-eslint/parser": "^7.6.0",
+        "concurrently": "^8.2.2",
+        "eslint": "^8.57.0",
+        "eslint-config-alloy": "^5.1.2",
+        "fs-extra": "^11.2.0",
+        "fs-readdir-recursive": "^1.1.0",
+        "nodemon": "^3.1.0",
+        "path-extra": "^4.3.0",
+        "typescript": "^5.4.5",
+        "yaml-import": "^2.0.0"
     }
 }

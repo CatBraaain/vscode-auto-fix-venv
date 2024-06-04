@@ -1,2 +1,4 @@
 ﻿test/*
 archive/*
+dist
+node_modules
