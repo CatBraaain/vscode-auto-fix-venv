@@ -1,5 +1,8 @@
+import { execSync } from "child_process";
+import find from "find-process";
 import fs from "fs";
 import path from "path";
+import { setTimeout } from "timers/promises";
 import vscode from "vscode";
 
 import Venv from "./venv.js";
@@ -26,24 +29,17 @@ export default class VenvRepairer {
   }
 
   public static async recreateVenvs(): Promise<void> {
-    if (process.platform !== "win32") {
-      vscode.window.showInformationMessage(
-        "Recreate venvs: This commands is currently available in Windows only. I welcome pull request."
-      );
-      return;
-    }
-
     const venvs = await this.getVenvs();
     venvs.forEach(async (venv, index) => {
-      const shouldRun = (await venv.isLocked()) ? await this._shouldForceRun() : true;
+      const shouldRun = (await venv.isLocked()) ? await this._shouldRunForcefully() : true;
       if (shouldRun) {
         this._recreateVenv(venv, index);
       }
     });
   }
 
-  private static async _shouldForceRun(): Promise<boolean> {
-    // TODO: "always" option
+  private static async _shouldRunForcefully(): Promise<boolean> {
+    // TODO: add "always" option
     const answer = await vscode.window.showWarningMessage(
       "Recreate venvs: The venv file is being used by another process. Do you want to continue forcefully?",
       // "Always",
@@ -55,48 +51,32 @@ export default class VenvRepairer {
     return shouldForceRun;
   }
 
-  private static _recreateVenv(venv, index): void {
-    const commands = this._getCommands(venv, index);
-
-    // TODO: option to run in background
-    const terminal = this._getTerminal("auto-fix-venv", index);
-    terminal.show();
-    commands.forEach(command => {
-      // TODO: error check
-      terminal.sendText(`${command}`);
-    });
-  }
-
-  private static _getCommands(venv, index): string[] {
+  private static async _recreateVenv(venv, index): Promise<void> {
     const tempRequirementPath = `temp_requirements_${index}.txt`;
-    const baseCommands = [
-      `powershell -command "while ($processes = Get-Process | ? {$_.Path -eq """${venv.pythonPath}"""}){$processes | Stop-Process; Start-Sleep 1;}"`,
-      `"${venv.deactivatePath}"`,
-      `"${venv.pythonPath}" -m pip freeze > "${tempRequirementPath}"`,
-      `rd /s /q "${venv.path}"`,
-      `python -m venv "${venv.path}"`,
-      // `python -m virtualenv ${venvPath}`,
-      `"${venv.pythonPath}" -m pip install --upgrade pip`,
-      `"${venv.pipPath}" install -r "${tempRequirementPath}"`,
-      `del "${tempRequirementPath}"`,
-      `echo "Finished recreating venv"`,
-    ];
 
-    const defaultTerminal = vscode.env.shell;
-    const isPowershell = defaultTerminal.includes("powershell");
-    const commands = isPowershell
-      ? baseCommands.map(command => `cmd.exe /c '${command.replaceAll("'", "''")}'`)
-      : baseCommands;
-    return commands;
+    await this._killBlockingProcess(venv);
+    // add error check on execSync
+    execSync(`"${venv.deactivatePath}"`);
+    execSync(`"${venv.pythonPath}" -m pip freeze > "${tempRequirementPath}"`);
+    fs.rmSync(venv.path, { force: true, recursive: true });
+    execSync(`python -m venv "${venv.path}"`);
+    execSync(`"${venv.pythonPath}" -m pip install --upgrade pip`);
+    execSync(`"${venv.pipPath}" install -r "${tempRequirementPath}"`);
+    fs.rmSync(tempRequirementPath, { force: true });
   }
 
-  private static _getTerminal(terminalName, index): vscode.Terminal {
-    const existingTerminal = vscode.window.terminals.filter(
-      terminal => terminal.name === terminalName
-    )[index];
-    const terminal = existingTerminal
-      ? existingTerminal
-      : vscode.window.createTerminal(terminalName);
-    return terminal;
+  private static async _killBlockingProcess(venv) {
+    while (true) {
+      const prosesses = await find("name", ".*?");
+      const blockingProcesses = prosesses.filter(prosess => prosess["bin"] === venv.pythonPath);
+      if (blockingProcesses.length === 0) {
+        break;
+      } else {
+        blockingProcesses.forEach(blockingProcess => {
+          process.kill(blockingProcess.pid);
+        });
+        await setTimeout(1000);
+      }
+    }
   }
 }
