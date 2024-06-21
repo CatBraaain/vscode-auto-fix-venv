@@ -6,7 +6,7 @@ export default class Activator {
   public path: string;
 
   public oldSource: string;
-  public oldHardCodedVenvPath: string | RegExp;
+  public oldHardCodedVenvPath: string | undefined;
   public newSource: string;
   public newHardCodedVenvPath: string;
 
@@ -16,12 +16,15 @@ export default class Activator {
     this.path = activatorPath;
 
     this.oldSource = fs.readFileSync(this.path, "utf8");
-    this.oldHardCodedVenvPath =
-      this.oldSource.match(/VIRTUAL_ENV\b[ ="']+([^"'\r\n]+)["']?$/im)?.at(1) ||
-      /(?=impossible)toMatch/;
+    this.oldHardCodedVenvPath = this.oldSource
+      .match(/VIRTUAL_ENV\b[ ="']+([^"'\r\n]+)["']?$/im)
+      ?.at(1);
 
     this.newHardCodedVenvPath = path.join(this.path, "..", "..");
-    this.newSource = this.oldSource.replace(this.oldHardCodedVenvPath, this.newHardCodedVenvPath);
+    this.newSource = this.oldSource.replace(
+      this.oldHardCodedVenvPath || /(?=impossible)toMatch/,
+      this.newHardCodedVenvPath
+    );
 
     this.isBroken = this.oldHardCodedVenvPath !== this.newHardCodedVenvPath;
   }

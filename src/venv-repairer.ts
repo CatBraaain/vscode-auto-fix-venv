@@ -8,9 +8,9 @@ import vscode from "vscode";
 import Venv from "./venv.js";
 
 export default class VenvRepairer {
-  public static async getVenvs(): Promise<Venv[]> {
+  private static async _getVenvs(): Promise<Venv[]> {
     const pythonUris = await vscode.workspace.findFiles("**/{Scripts,bin}/python.exe");
-    const pythonPaths = pythonUris.map(pythonUri => path.normalize(pythonUri.fsPath));
+    const pythonPaths = pythonUris.map(pythonUri => path.normalize(pythonUri.fsPath)); // fsPath is cross-platform
     const venvPaths = Array.from(
       new Set(pythonPaths.map(pythonPath => path.join(pythonPath, "..", "..")))
     );
@@ -20,7 +20,7 @@ export default class VenvRepairer {
   }
 
   public static async fixBrokenActivators(): Promise<void> {
-    const venvs = await this.getVenvs();
+    const venvs = await this._getVenvs();
     venvs.forEach(venv =>
       venv.activators
         .filter(activator => activator.isBroken)
@@ -29,7 +29,7 @@ export default class VenvRepairer {
   }
 
   public static async recreateVenvs(): Promise<void> {
-    const venvs = await this.getVenvs();
+    const venvs = await this._getVenvs();
     venvs.forEach(async (venv, index) => {
       const shouldRun = (await venv.isLocked()) ? await this._shouldRunForcefully() : true;
       if (shouldRun) {
