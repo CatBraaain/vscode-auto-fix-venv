@@ -1,8 +1,7 @@
-import { execSync } from "child_process";
+import fs from "node:fs";
+import path from "node:path";
+
 import find from "find-process";
-import fs from "fs";
-import path from "path";
-import vscode from "vscode";
 
 import Activator from "./activator.js";
 

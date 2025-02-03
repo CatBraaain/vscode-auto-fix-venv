@@ -1,5 +1,3 @@
-import fs from "fs";
-import path from "path";
 import vscode from "vscode";
 
 import VenvRepairer from "./venv-repairer.js";

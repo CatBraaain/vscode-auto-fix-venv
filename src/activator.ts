@@ -1,6 +1,5 @@
-import fs from "fs";
-import path from "path";
-import vscode from "vscode";
+import fs from "node:fs";
+import path from "node:path";
 
 export default class Activator {
   public path: string;

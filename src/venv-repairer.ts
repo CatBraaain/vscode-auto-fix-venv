@@ -1,5 +1,5 @@
-import fs from "fs";
-import path from "path";
+import path from "node:path";
+
 import vscode from "vscode";
 
 import Venv from "./venv.js";
@@ -63,7 +63,7 @@ export default class VenvRepairer {
     terminal.show();
     commands.forEach((command) => {
       // TODO: error check
-      terminal.sendText(`${command}`);
+      terminal.sendText(command);
     });
   }
 
