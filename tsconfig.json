@@ -1,20 +1,23 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
-    "target": "ES2022",
-    "lib": ["ES2023"],
-    "rootDir": "./src",
+    "module": "ESNext", // ESNext: bundler, NodeNext: node.js or using commonjs package
+    "moduleResolution": "bundler", // bundler: bundler, NodeNext: node.js or using commonjs package
+    "target": "ESNext",
+    "lib": ["ESNext"],
+    "rootDir": ".",
+    "outDir": "dist",
     "allowJs": true,
-    "outDir": "./dist",
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "strict": true,
-    "moduleDetection": "force",
-    "skipLibCheck": true,
-    "sourceMap": true,
-    "noImplicitAny": false, // temporary solution
-    "downlevelIteration": true
+    "esModuleInterop": true, // ensures compatibility between ESModule and CommonJS modules.
+    "forceConsistentCasingInFileNames": true, // enforces consistent letter casing in file names
+    "isolatedModules": true, // for bundler option
+    "moduleDetection": "force", // forces files to be detected as modules
+    "noImplicitAny": false, // temporary solution to allow implicit 'any' type
+    "noImplicitReturns": true, // ensures that all code paths in a function return a value
+    "resolveJsonModule": true,
+    "skipLibCheck": true, // skips type checking of files in libraries to reduce compilation time
+    "sourceMap": true, // generates corresponding '.map' files for debugging
+    "strict": true // enables all strict type-checking options
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "*.*ts", "*.*js"],
   "exclude": ["node_modules"]
 }
