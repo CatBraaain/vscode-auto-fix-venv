@@ -21,6 +21,14 @@
       }
     ]
   },
+  "prettier": {
+    "arrowParens": "always",
+    "plugins": [
+      "prettier-plugin-packagejson"
+    ],
+    "printWidth": 100,
+    "trailingComma": "all"
+  },
   "scripts": {
     "watch": "conc npm:watch:*",
     "watch:1:typecheck": "tsc -w -noEmit --preserveWatchOutput",
