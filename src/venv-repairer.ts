@@ -5,6 +5,15 @@ import vscode from "vscode";
 import Venv from "./venv.js";
 
 export default class VenvRepairer {
+  public static async fixBrokenActivators(): Promise<void> {
+    const venvs = await this.getVenvs();
+    venvs.forEach((venv) =>
+      venv.activators
+        .filter((activator) => activator.isBroken)
+        .forEach((activator) => activator.fixHardCodedPath()),
+    );
+  }
+
   public static async getVenvs(): Promise<Venv[]> {
     const pythonUris = await vscode.workspace.findFiles("**/{Scripts,bin}/python.exe");
     const pythonPaths = pythonUris.map((pythonUri) => path.normalize(pythonUri.fsPath));
@@ -14,15 +23,6 @@ export default class VenvRepairer {
 
     const venvs = venvPaths.map((venvPath) => new Venv(venvPath));
     return venvs;
-  }
-
-  public static async fixBrokenActivators(): Promise<void> {
-    const venvs = await this.getVenvs();
-    venvs.forEach((venv) =>
-      venv.activators
-        .filter((activator) => activator.isBroken)
-        .forEach((activator) => activator.fixHardCodedPath()),
-    );
   }
 
   public static async recreateVenvs(): Promise<void> {
