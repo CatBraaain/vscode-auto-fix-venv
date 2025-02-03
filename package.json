@@ -29,21 +29,21 @@
         "url": "https://github.com/CatBraaain/vscode-auto-fix-venv.git"
     },
     "devDependencies": {
-        "@types/node": "^20.12.2",
-        "@types/vscode": "^1.87.0",
-        "@typescript-eslint/eslint-plugin": "^7.6.0",
-        "@typescript-eslint/parser": "^7.6.0",
-        "concurrently": "^8.2.2",
-        "eslint": "^8.57.0",
+        "@types/node": "^22.13.0",
+        "@types/vscode": "^1.96.0",
+        "@typescript-eslint/eslint-plugin": "^8.22.0",
+        "@typescript-eslint/parser": "^8.22.0",
+        "concurrently": "^9.1.2",
+        "eslint": "^9.19.0",
         "eslint-config-alloy": "^5.1.2",
-        "fs-extra": "^11.2.0",
+        "fs-extra": "^11.3.0",
         "fs-readdir-recursive": "^1.1.0",
-        "nodemon": "^3.1.0",
+        "nodemon": "^3.1.9",
         "path-extra": "^4.3.0",
-        "typescript": "^5.4.5",
-        "yaml-import": "^2.0.0"
+        "typescript": "^5.7.3",
+        "yaml-import": "^3.0.0"
     },
     "dependencies": {
-        "find-process": "^1.4.7"
+        "find-process": "^1.4.10"
     }
 }
