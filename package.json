@@ -22,7 +22,10 @@
     ]
   },
   "scripts": {
-    "watch": "tsc -w"
+    "watch": "conc npm:watch:*",
+    "watch:1:typecheck": "tsc -w -noEmit --preserveWatchOutput",
+    "watch:2:compile": "vite build -w",
+    "watch:3:config": "nodemon -w vite.config.mts -x \"vite build\""
   },
   "repository": {
     "type": "git",
