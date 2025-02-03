@@ -1,18 +1,20 @@
 {
   "name": "auto-fix-venv",
-  "version": "1.2.2",
   "displayName": "Auto Fix Venv",
+  "version": "1.2.2",
   "description": "Automatically detect broken python venv and fix it",
-  "publisher": "CatBraaain",
-  "engines": {
-    "vscode": "^1.33.1"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CatBraaain/vscode-auto-fix-venv.git"
   },
-  "lisence": "MIT",
+  "publisher": "CatBraaain",
   "main": "./dist/extension.js",
-  "activationEvents": [
-    "*",
-    "workspaceContains:**/{Scripts,bin}/python.exe"
-  ],
+  "scripts": {
+    "watch": "conc npm:watch:*",
+    "watch:1:typecheck": "tsc -w -noEmit --preserveWatchOutput",
+    "watch:2:compile": "vite build -w",
+    "watch:3:config": "nodemon -w vite.config.mts -x \"vite build\""
+  },
   "contributes": {
     "commands": [
       {
@@ -21,6 +23,10 @@
       }
     ]
   },
+  "activationEvents": [
+    "*",
+    "workspaceContains:**/{Scripts,bin}/python.exe"
+  ],
   "prettier": {
     "arrowParens": "always",
     "plugins": [
@@ -29,15 +35,8 @@
     "printWidth": 100,
     "trailingComma": "all"
   },
-  "scripts": {
-    "watch": "conc npm:watch:*",
-    "watch:1:typecheck": "tsc -w -noEmit --preserveWatchOutput",
-    "watch:2:compile": "vite build -w",
-    "watch:3:config": "nodemon -w vite.config.mts -x \"vite build\""
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/CatBraaain/vscode-auto-fix-venv.git"
+  "dependencies": {
+    "find-process": "^1.4.10"
   },
   "devDependencies": {
     "@eslint/compat": "^1.2.6",
@@ -63,7 +62,8 @@
     "typescript-eslint": "^8.22.0",
     "vite": "^6.0.11"
   },
-  "dependencies": {
-    "find-process": "^1.4.10"
-  }
+  "engines": {
+    "vscode": "^1.33.1"
+  },
+  "lisence": "MIT"
 }
