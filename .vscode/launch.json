@@ -1,15 +1,15 @@
 {
-    "configurations": [
-        {
-            "name": "Extension",
-            "type": "extensionHost",
-            "request": "launch",
-            "runtimeExecutable": "${execPath}",
-            "args": [
-                "${workspaceFolder}/test",
-                "--extensionDevelopmentPath=${workspaceFolder}",
-                "--disable-extensions"
-            ]
-        }
-    ]
+  "configurations": [
+    {
+      "name": "Extension",
+      "type": "extensionHost",
+      "request": "launch",
+      "runtimeExecutable": "${execPath}",
+      "args": [
+        "${workspaceFolder}/test",
+        "--extensionDevelopmentPath=${workspaceFolder}",
+        "--disable-extensions"
+      ]
+    }
+  ]
 }

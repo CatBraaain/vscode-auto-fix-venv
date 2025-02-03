@@ -1,6 +1,6 @@
 ﻿# Auto Fix Venv
 
-Automatically detect broken python venv and fix it. 
+Automatically detect broken python venv and fix it.
 Support Windows,Linux and Mac.
 
 ![flowchart](docs/flowchart.png)

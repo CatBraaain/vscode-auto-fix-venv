@@ -10,7 +10,7 @@ async function activate(context) {
   context.subscriptions.push(
     vscode.commands.registerCommand("auto-fix-venv.recreateVenvs", () => {
       VenvRepairer.recreateVenvs();
-    })
+    }),
   );
 
   return;

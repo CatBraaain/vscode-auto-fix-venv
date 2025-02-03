@@ -7,28 +7,28 @@ import Venv from "./venv.js";
 export default class VenvRepairer {
   public static async getVenvs(): Promise<Venv[]> {
     const pythonUris = await vscode.workspace.findFiles("**/{Scripts,bin}/python.exe");
-    const pythonPaths = pythonUris.map(pythonUri => path.normalize(pythonUri.fsPath));
+    const pythonPaths = pythonUris.map((pythonUri) => path.normalize(pythonUri.fsPath));
     const venvPaths = Array.from(
-      new Set(pythonPaths.map(pythonPath => path.join(pythonPath, "..", "..")))
+      new Set(pythonPaths.map((pythonPath) => path.join(pythonPath, "..", ".."))),
     );
 
-    const venvs = venvPaths.map(venvPath => new Venv(venvPath));
+    const venvs = venvPaths.map((venvPath) => new Venv(venvPath));
     return venvs;
   }
 
   public static async fixBrokenActivators(): Promise<void> {
     const venvs = await this.getVenvs();
-    venvs.forEach(venv =>
+    venvs.forEach((venv) =>
       venv.activators
-        .filter(activator => activator.isBroken)
-        .forEach(activator => activator.fixHardCodedPath())
+        .filter((activator) => activator.isBroken)
+        .forEach((activator) => activator.fixHardCodedPath()),
     );
   }
 
   public static async recreateVenvs(): Promise<void> {
     if (process.platform !== "win32") {
       vscode.window.showInformationMessage(
-        "Recreate venvs: This commands is currently available in Windows only. I welcome pull request."
+        "Recreate venvs: This commands is currently available in Windows only. I welcome pull request.",
       );
       return;
     }
@@ -49,7 +49,7 @@ export default class VenvRepairer {
       // "Always",
       // "Once",
       "Yes",
-      "Cancel"
+      "Cancel",
     );
     const shouldForceRun = answer === "Yes";
     return shouldForceRun;
@@ -61,7 +61,7 @@ export default class VenvRepairer {
     // TODO: option to run in background
     const terminal = this._getTerminal("auto-fix-venv", index);
     terminal.show();
-    commands.forEach(command => {
+    commands.forEach((command) => {
       // TODO: error check
       terminal.sendText(`${command}`);
     });
@@ -85,14 +85,14 @@ export default class VenvRepairer {
     const defaultTerminal = vscode.env.shell;
     const isPowershell = defaultTerminal.includes("powershell");
     const commands = isPowershell
-      ? baseCommands.map(command => `cmd.exe /c '${command.replaceAll("'", "''")}'`)
+      ? baseCommands.map((command) => `cmd.exe /c '${command.replaceAll("'", "''")}'`)
       : baseCommands;
     return commands;
   }
 
   private static _getTerminal(terminalName, index): vscode.Terminal {
     const existingTerminal = vscode.window.terminals.filter(
-      terminal => terminal.name === terminalName
+      (terminal) => terminal.name === terminalName,
     )[index];
     const terminal = existingTerminal
       ? existingTerminal

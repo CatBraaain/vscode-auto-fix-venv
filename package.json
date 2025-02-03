@@ -1,49 +1,49 @@
 {
-    "name": "auto-fix-venv",
-    "version": "1.2.2",
-    "displayName": "Auto Fix Venv",
-    "description": "Automatically detect broken python venv and fix it",
-    "publisher": "CatBraaain",
-    "engines": {
-        "vscode": "^1.33.1"
-    },
-    "lisence": "MIT",
-    "main": "./dist/extension.js",
-    "activationEvents": [
-        "*",
-        "workspaceContains:**/{Scripts,bin}/python.exe"
-    ],
-    "contributes": {
-        "commands": [
-            {
-                "command": "auto-fix-venv.recreateVenvs",
-                "title": "Auto Fix Venv: Recreate venvs"
-            }
-        ]
-    },
-    "scripts": {
-        "watch": "tsc -w"
-    },
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/CatBraaain/vscode-auto-fix-venv.git"
-    },
-    "devDependencies": {
-        "@types/node": "^22.13.0",
-        "@types/vscode": "^1.96.0",
-        "@typescript-eslint/eslint-plugin": "^8.22.0",
-        "@typescript-eslint/parser": "^8.22.0",
-        "concurrently": "^9.1.2",
-        "eslint": "^9.19.0",
-        "eslint-config-alloy": "^5.1.2",
-        "fs-extra": "^11.3.0",
-        "fs-readdir-recursive": "^1.1.0",
-        "nodemon": "^3.1.9",
-        "path-extra": "^4.3.0",
-        "typescript": "^5.7.3",
-        "yaml-import": "^3.0.0"
-    },
-    "dependencies": {
-        "find-process": "^1.4.10"
-    }
+  "name": "auto-fix-venv",
+  "version": "1.2.2",
+  "displayName": "Auto Fix Venv",
+  "description": "Automatically detect broken python venv and fix it",
+  "publisher": "CatBraaain",
+  "engines": {
+    "vscode": "^1.33.1"
+  },
+  "lisence": "MIT",
+  "main": "./dist/extension.js",
+  "activationEvents": [
+    "*",
+    "workspaceContains:**/{Scripts,bin}/python.exe"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "auto-fix-venv.recreateVenvs",
+        "title": "Auto Fix Venv: Recreate venvs"
+      }
+    ]
+  },
+  "scripts": {
+    "watch": "tsc -w"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CatBraaain/vscode-auto-fix-venv.git"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.0",
+    "@types/vscode": "^1.96.0",
+    "@typescript-eslint/eslint-plugin": "^8.22.0",
+    "@typescript-eslint/parser": "^8.22.0",
+    "concurrently": "^9.1.2",
+    "eslint": "^9.19.0",
+    "eslint-config-alloy": "^5.1.2",
+    "fs-extra": "^11.3.0",
+    "fs-readdir-recursive": "^1.1.0",
+    "nodemon": "^3.1.9",
+    "path-extra": "^4.3.0",
+    "typescript": "^5.7.3",
+    "yaml-import": "^3.0.0"
+  },
+  "dependencies": {
+    "find-process": "^1.4.10"
+  }
 }

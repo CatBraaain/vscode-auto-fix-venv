@@ -35,29 +35,29 @@ export default class Venv {
 
   private _getScriptDirPath(): string {
     const dirNames = fs.readdirSync(this.path);
-    const scriptDirNames = dirNames.filter(dirName => targetDirNames.includes(dirName));
-    const scriptDirPaths = scriptDirNames.map(dirName => path.join(this.path, dirName));
-    const scriptDirPath = scriptDirPaths.find(scriptDirPath =>
-      fs.existsSync(path.join(scriptDirPath, "python.exe"))
+    const scriptDirNames = dirNames.filter((dirName) => targetDirNames.includes(dirName));
+    const scriptDirPaths = scriptDirNames.map((dirName) => path.join(this.path, dirName));
+    const scriptDirPath = scriptDirPaths.find((scriptDirPath) =>
+      fs.existsSync(path.join(scriptDirPath, "python.exe")),
     )!;
     return scriptDirPath;
   }
 
   private _getActivators(): Activator[] {
     const scriptFileNames = fs.readdirSync(this.scriptDirPath);
-    const activatorNames = scriptFileNames.filter(scriptFileName =>
-      targetActivatorNames.includes(scriptFileName)
+    const activatorNames = scriptFileNames.filter((scriptFileName) =>
+      targetActivatorNames.includes(scriptFileName),
     );
-    const activatorPaths = activatorNames.map(activatorName =>
-      path.join(this.scriptDirPath, activatorName)
+    const activatorPaths = activatorNames.map((activatorName) =>
+      path.join(this.scriptDirPath, activatorName),
     );
-    const activators = activatorPaths.map(activatorPath => new Activator(activatorPath));
+    const activators = activatorPaths.map((activatorPath) => new Activator(activatorPath));
     return activators;
   }
 
   public async isLocked(): Promise<boolean> {
     const prosesses = await find("name", ".*?");
-    const isLocked = prosesses.some(prosess => prosess["bin"] === this.pythonPath);
+    const isLocked = prosesses.some((prosess) => prosess["bin"] === this.pythonPath);
     return isLocked;
   }
 }
