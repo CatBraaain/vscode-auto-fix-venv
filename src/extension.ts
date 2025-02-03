@@ -2,7 +2,7 @@ import vscode from "vscode";
 
 import VenvRepairer from "./venv-repairer.js";
 
-async function activate(context) {
+export async function activate(context) {
   VenvRepairer.fixBrokenActivators();
 
   context.subscriptions.push(
@@ -10,15 +10,4 @@ async function activate(context) {
       VenvRepairer.recreateVenvs();
     }),
   );
-
-  return;
 }
-
-function deactivate() {
-  return undefined;
-}
-
-// console.log("for debug message");
-// vscode.window.showInformationMessage("for debug message");
-
-export { activate, deactivate };
