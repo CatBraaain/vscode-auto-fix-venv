@@ -36,7 +36,8 @@
     "trailingComma": "all"
   },
   "dependencies": {
-    "find-process": "^1.4.10"
+    "find-process": "^1.4.10",
+    "fkill": "^9.0.0"
   },
   "devDependencies": {
     "@eslint/compat": "^1.2.6",
