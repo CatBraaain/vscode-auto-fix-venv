@@ -64,7 +64,7 @@ export default class VenvRepairer {
           .toString()
           .split("\n");
 
-        progress.report({ message: "Releasing venv lock ..." });
+        progress.report({ message: "Killing venv process ..." });
         await this._killingProcesses(venv, progress);
 
         progress.report({ message: "Deleting venv ..." });
