@@ -64,22 +64,22 @@ export default class VenvRepairer {
           .toString()
           .split("\n");
 
-        progress.report({ increment: 100 / 6, message: "Releasing venv lock ..." });
+        progress.report({ message: "Releasing venv lock ..." });
         await this._killingProcesses(venv, progress);
 
         progress.report({ message: "Deleting venv ..." });
         fs.rmSync(venv.path, { recursive: true, force: true });
 
-        progress.report({ increment: 100 / 6, message: "Creating venv ..." });
+        progress.report({ message: "Creating venv ..." });
         execSync(`python -m venv ${venv.path}`);
 
-        progress.report({ increment: 100 / 6, message: "Upgrading pip ..." });
+        progress.report({ message: "Upgrading pip ..." });
         execSync(`${venv.pythonPath} -m pip install --upgrade pip`);
 
-        progress.report({ increment: 100 / 6, message: "Restoring pip packages ..." });
+        progress.report({ message: "Restoring pip packages ..." });
         execSync(`${venv.pipPath} install ${packages.join(" ")}`);
 
-        progress.report({ increment: 100 / 6, message: `Done` });
+        progress.report({ message: `Done` });
       },
     );
   }
@@ -98,7 +98,6 @@ export default class VenvRepairer {
           targetProcesses.map((p) => p.pid),
           { force: true },
         );
-        progress.report({ increment: 100 / 6 / 3, message: "Releasing venv lock ..." });
       } catch {
         failureCount++;
         if (failureCount >= 10) {
