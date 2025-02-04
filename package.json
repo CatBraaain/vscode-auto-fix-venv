@@ -24,7 +24,6 @@
     ]
   },
   "activationEvents": [
-    "*",
     "workspaceContains:**/{Scripts,bin}/python.exe"
   ],
   "prettier": {
