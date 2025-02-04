@@ -18,6 +18,10 @@
   "contributes": {
     "commands": [
       {
+        "command": "auto-fix-venv.fixVenvs",
+        "title": "Auto Fix Venv: Fix venvs"
+      },
+      {
         "command": "auto-fix-venv.recreateVenvs",
         "title": "Auto Fix Venv: Recreate venvs"
       }

@@ -8,13 +8,24 @@ import vscode from "vscode";
 import Venv from "./venv.js";
 
 export default class VenvRepairer {
-  public static async fixBrokenActivators(): Promise<void> {
+  public static async fixBrokenActivators(showNotification = false): Promise<void> {
     const venvs = await this.getVenvs();
-    venvs.forEach((venv) =>
-      venv.activators
-        .filter((activator) => activator.isBroken)
-        .forEach((activator) => activator.fixHardCodedPath()),
+    const brokenActivators = venvs.flatMap((venv) =>
+      venv.activators.filter((activator) => activator.isBroken),
     );
+    brokenActivators.forEach((activator) => activator.fixHardCodedPath());
+
+    if (showNotification) {
+      let message;
+      if (venvs.length === 0) {
+        message = "Auto Fix Venv: No venvs found";
+      } else if (brokenActivators.length === 0) {
+        message = "Auto Fix Venv: No broken venvs found";
+      } else {
+        message = "Auto Fix Venv: Successfully fixed venvs";
+      }
+      vscode.window.showInformationMessage(message);
+    }
   }
 
   public static async getVenvs(): Promise<Venv[]> {
