@@ -52,28 +52,39 @@ export default class VenvRepairer {
   }
 
   private static async _recreateVenv(venv: Venv, index: number): Promise<void> {
-    console.log("pip freezing");
-    const packages = execSync(`${venv.pythonPath} -m pip freeze`).toString().split("\n").join(" ");
+    await vscode.window.withProgress(
+      {
+        cancellable: false,
+        location: vscode.ProgressLocation.Notification,
+        title: "Recreate Venv",
+      },
+      async (progress) => {
+        progress.report({ message: "Saving pip packages ..." });
+        const packages: string[] = execSync(`${venv.pythonPath} -m pip freeze`)
+          .toString()
+          .split("\n");
 
-    console.log("killing process");
-    await this._killingProcesses(venv);
+        progress.report({ increment: 100 / 6, message: "Releasing venv lock ..." });
+        await this._killingProcesses(venv, progress);
 
-    console.log("deleting venv");
-    fs.rmSync(venv.path, { recursive: true, force: true });
+        progress.report({ message: "Deleting venv ..." });
+        fs.rmSync(venv.path, { recursive: true, force: true });
 
-    console.log("creating venv");
-    execSync(`python -m venv ${venv.path}`);
+        progress.report({ increment: 100 / 6, message: "Creating venv ..." });
+        execSync(`python -m venv ${venv.path}`);
 
-    console.log("pip upgrading");
-    execSync(`${venv.pythonPath} -m pip install --upgrade pip`);
+        progress.report({ increment: 100 / 6, message: "Upgrading pip ..." });
+        execSync(`${venv.pythonPath} -m pip install --upgrade pip`);
 
-    console.log("pip installing");
-    execSync(`${venv.pipPath} install ${packages}`);
+        progress.report({ increment: 100 / 6, message: "Restoring pip packages ..." });
+        execSync(`${venv.pipPath} install ${packages.join(" ")}`);
 
-    console.log("done");
+        progress.report({ increment: 100 / 6, message: `Done` });
+      },
+    );
   }
 
-  private static async _killingProcesses(venv): Promise<void> {
+  private static async _killingProcesses(venv: Venv, progress): Promise<void> {
     const { default: fkill } = await import("fkill");
     let targetProcesses: Process[] = [];
     let failureCount = 0;
@@ -87,6 +98,7 @@ export default class VenvRepairer {
           targetProcesses.map((p) => p.pid),
           { force: true },
         );
+        progress.report({ increment: 100 / 6 / 3, message: "Releasing venv lock ..." });
       } catch {
         failureCount++;
         if (failureCount >= 10) {
