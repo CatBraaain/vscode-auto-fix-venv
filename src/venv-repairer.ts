@@ -65,7 +65,7 @@ export default class VenvRepairer {
           .split("\n");
 
         progress.report({ message: "Killing venv process ..." });
-        await this._killingProcesses(venv, progress);
+        await this._killProcesses(venv, progress);
 
         progress.report({ message: "Deleting venv ..." });
         fs.rmSync(venv.path, { recursive: true, force: true });
@@ -84,7 +84,7 @@ export default class VenvRepairer {
     );
   }
 
-  private static async _killingProcesses(venv: Venv, progress): Promise<void> {
+  private static async _killProcesses(venv: Venv, progress): Promise<void> {
     const { default: fkill } = await import("fkill");
     let targetProcesses: Process[] = [];
     let failureCount = 0;
