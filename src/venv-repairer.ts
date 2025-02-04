@@ -93,6 +93,7 @@ export default class VenvRepairer {
         progress.report({ message: `Done` });
       },
     );
+    vscode.window.showInformationMessage("Auto Fix Venv: Successfully recreated venvs");
   }
 
   private static async _killProcesses(venv: Venv, progress): Promise<void> {
