@@ -1,6 +1,8 @@
-﻿.vscode/**
+.vscode/**
 src/**
 test/**
+
+**/*.js.map
 
 .gitignore
 eslint.config.mjs
