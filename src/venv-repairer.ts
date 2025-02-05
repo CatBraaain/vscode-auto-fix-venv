@@ -41,12 +41,15 @@ export default class VenvRepairer {
 
   public static async recreateVenvs(): Promise<void> {
     const venvs = await this.getVenvs();
-    venvs.forEach(async (venv, index) => {
-      const shouldRun = (await venv.isLocked()) ? await this._shouldForceRun() : true;
-      if (shouldRun) {
-        await this._recreateVenv(venv, index);
-      }
-    });
+    await Promise.all(
+      venvs.map(async (venv, index) => {
+        const shouldRun = (await venv.isLocked()) ? await this._shouldForceRun() : true;
+        if (shouldRun) {
+          await this._recreateVenv(venv, index);
+        }
+      }),
+    );
+    vscode.window.showInformationMessage("Auto Fix Venv: Successfully recreated venvs");
   }
 
   private static async _shouldForceRun(): Promise<boolean> {
@@ -103,7 +106,6 @@ export default class VenvRepairer {
         progress.report({ message: `Done` });
       },
     );
-    vscode.window.showInformationMessage("Auto Fix Venv: Successfully recreated venvs");
   }
 
   private static async _killProcesses(venv: Venv, progress): Promise<void> {
