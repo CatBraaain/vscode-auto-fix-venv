@@ -80,7 +80,7 @@ export default class VenvRepairer {
       {
         cancellable: false,
         location: vscode.ProgressLocation.Notification,
-        title: "Recreate Venvs",
+        title: `Recreate Venvs [${index}]`,
       },
       async (progress) => {
         progress.report({ message: "Saving pip packages ..." });
