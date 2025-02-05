@@ -1,10 +1,24 @@
 ﻿import nodeExternals from "rollup-plugin-node-externals";
 import { defineConfig } from "vite";
 import type { LibraryFormats } from "vite";
+import { viteStaticCopy } from "vite-plugin-static-copy";
 
 export default defineConfig(() => {
   return {
-    plugins: [nodeExternals()],
+    plugins: [
+      nodeExternals({
+        builtins: true,
+        deps: false,
+      }),
+      viteStaticCopy({
+        targets: [
+          {
+            src: "node_modules/ps-list/vendor",
+            dest: "",
+          },
+        ],
+      }),
+    ],
     build: {
       rollupOptions: {
         external: ["vscode"],
