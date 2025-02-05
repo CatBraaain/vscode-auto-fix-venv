@@ -50,15 +50,25 @@ export default class VenvRepairer {
   }
 
   private static async _shouldForceRun(): Promise<boolean> {
-    // TODO: "always" option
+    const FORCE_RUN_SECTION = "auto-fix-venv.forceRun";
+
+    const config = vscode.workspace.getConfiguration();
+    if (config.get(FORCE_RUN_SECTION)) {
+      return true;
+    }
+
     const answer = await vscode.window.showWarningMessage(
-      "Recreate venvs: The venv file is being used by another process. Do you want to continue forcefully?",
-      // "Always",
-      // "Once",
-      "Yes",
+      "Recreate venvs: The venv directory is currently in use by another process. Do you want to forcefully recreate it?",
+      "Always",
+      "Once",
       "Cancel",
     );
-    const shouldForceRun = answer === "Yes";
+
+    if (answer === "Always") {
+      config.update(FORCE_RUN_SECTION, true, vscode.ConfigurationTarget.Global);
+    }
+
+    const shouldForceRun = answer === "Always" || answer === "Once";
     return shouldForceRun;
   }
 

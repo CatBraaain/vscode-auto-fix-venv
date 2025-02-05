@@ -25,7 +25,17 @@
         "command": "auto-fix-venv.recreateVenvs",
         "title": "Auto Fix Venv: Recreate venvs"
       }
-    ]
+    ],
+    "configuration": {
+      "title": "Auto Fix Venv",
+      "properties": {
+        "auto-fix-venv.forceRun": {
+          "type": "boolean",
+          "default": false,
+          "description": "Skip confirmation in RecreateVenvs command."
+        }
+      }
+    }
   },
   "activationEvents": [
     "workspaceContains:**/{Scripts,bin}/python.exe"
