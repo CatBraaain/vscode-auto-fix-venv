@@ -1,25 +1,19 @@
 ﻿# Auto Fix Venv
 
 Automatically detect broken python venv and fix it.
-Support Windows,Linux and Mac.
+Supports Windows, Linux, and macOS.
 
 ![flowchart](docs/flowchart.png)
 
 ## Features
 
-- Detect multiple venvs dynamically
-- Auto-Fix venv's activate files (activate,activate.bat,activate.csh,activate.fish,activate.nu)
+- Automatically detects multiple virtual environments.
+- Automatically fixes activation files for virtual environments (`activate`, `activate.bat`, `activate.csh`, `activate.fish`, `activate.nu`).
 
-## Upcoming Features
+## Commands
 
-- `Recreate Venvs` command
-  - Some options
-  - Error check
+- **`Auto Fix Venv: Fix venvs`** (`auto-fix-venv.fixVenvs`)  
+  - Detects and fixes broken virtual environments. This command runs automatically at startup.
 
-## Keybindings
-
-Nothing
-
-## Extension Settings
-
-Coming soon
+- **`Auto Fix Venv: Recreate venvs`** (`auto-fix-venv.recreateVenvs`)  
+  - Recreates virtual environments. Can be configured to skip confirmation using `auto-fix-venv.forceRun`.
