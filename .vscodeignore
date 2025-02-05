@@ -1,4 +1,8 @@
-﻿test/**
+﻿.vscode/**
+src/**
+test/**
+
 .gitignore
-.vscode
-archive
+eslint.config.mjs
+tsconfig.json
+vite.config.mts
